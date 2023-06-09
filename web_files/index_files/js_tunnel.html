@@ -1,0 +1,98 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="referrer" content="always">
+  <meta name="csrf-param" content="authenticity_token">
+<meta name="csrf-token" content="Uu77TCDygCGYQM/ufFrwkYiIullOSA6FMKDTj9jwJaP9pB0xGpV99bVlhieyItQj7w4perNf7IRaFnkd07XMeA==">
+  <script async="" src="analytics.js"></script><script src="js_tunnel_data/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script>
+    function toQuery(json) {
+      return Object.keys(json).map(function(k) {
+        return encodeURIComponent(k) + '=' + encodeURIComponent(json[k])
+      }).join('&')
+    }
+
+    function receiveMessage(e) {
+      try {
+        if (e.origin === 'https://www.holycross.edu') {
+          var merit = e.data['merit'];
+          if (typeof merit !== 'undefined') {
+
+            var params = (merit['params'] || {});
+
+            if (merit['action'] == 'share') {
+              try {
+                ga('send', 'event', {
+                  eventCategory: merit['object'],
+                  eventAction:   merit['site'],
+                  eventLabel:    merit['url']
+                });
+              } catch (error) {
+              }
+              return;
+            } else if (merit['object'] == 'story') {
+              var url = '//api.meritpages.com/story/' + merit['id'] + '.json';
+            } else if (merit['object'] == 'achievement') {
+              var url = '//api.meritpages.com/achievement/' + merit['id'] + '.json';
+
+              params['page'] = (merit['page'] || 1);
+
+              if (params['merit_preview']) {
+                params['preview'] = 1;
+              }
+              if (merit['student_id']) {
+                params['student_id'] = merit['student_id'];
+              }
+              if (merit['query']) {
+                params['q'] = merit['query'];
+              }
+              if (merit['referring_org']) {
+                params['referring_org'] = merit['referring_org'];
+              }
+            } else if (merit['object'] == 'release') {
+              var url = '//api.meritpages.com/release/' + merit['id'] + '.json';
+            } else {
+              return;
+            }
+
+            params['url'] = escape(e.data['url']);
+            // params['t'] = "";
+
+            $.ajax({
+              url:  url,
+              data: toQuery(params)
+            }).done(function(data, msg, xhr) {
+              parent.postMessage(data, 'https://www.holycross.edu');
+            }).fail(function(res, msg, ex) {
+              var error = JSON.parse(res.responseText);
+              parent.postMessage({
+                error: {
+                  message: error['status'],
+                  code:    res.status}
+                },
+              'https://www.holycross.edu');
+            });
+          } else {
+            return;
+          }
+        }
+      } catch(error) {
+        parent.postMessage({ error: {message: error.message, code: 500}}, 'https://www.holycross.edu');
+      }
+    }
+    window.addEventListener("message", receiveMessage, false);
+  </script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-1734526-30', 'auto');
+  ga('send', 'pageview', {'dimension1': ''});
+</script></head>
+
+
+<body data-new-gr-c-s-check-loaded="8.904.0" data-gr-ext-installed="">
+
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

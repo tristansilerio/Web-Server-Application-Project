@@ -1,0 +1,1 @@
+!function(e,t,n){var r,s=e.getElementsByTagName(t)[0];e.getElementById(n)||((r=e.createElement(t)).id=n,r.src="//api.meritpages.com/sdk.js?t="+1*new Date,s.parentNode.insertBefore(r,s))}(document,"script","merit-js-sdk");
